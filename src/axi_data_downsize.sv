@@ -785,10 +785,10 @@ module axi_data_downsize #(
   `ifndef VERILATOR
     initial begin: validate_params
       assert(SI_DATA_WIDTH > MI_DATA_WIDTH)
-        else $fatal("Data downsizer not being used for downsizing.");
+        else $fatal(1, "Data downsizer not being used for downsizing.");
 
       assert (2**ID_WIDTH >= NR_OUTSTANDING)
-        else $fatal("The outstanding transactions could not be indexed with the given ID bits!");
+        else $fatal(1, "The outstanding transactions could not be indexed with the given ID bits!");
     end
   `endif
   // pragma translate_on

@@ -27,7 +27,7 @@ module axi_lite_to_axi (
   assign out.aw_id     = '0;
   assign out.aw_addr   = in.aw_addr;
   assign out.aw_len    = '0;
-  assign out.aw_size   = $unsigned($clog2($bits(out.w_data)/8));
+  assign out.aw_size   = $unsigned($clog2(out.AXI_DATA_WIDTH/8));
   assign out.aw_burst  = axi_pkg::BURST_FIXED;
   assign out.aw_lock   = '0;
   assign out.aw_cache  = '0; // non-modifiable and non-bufferable mandated by std
@@ -53,7 +53,7 @@ module axi_lite_to_axi (
   assign out.ar_id     = '0;
   assign out.ar_addr   = in.ar_addr;
   assign out.ar_len    = '0;
-  assign out.ar_size   = $unsigned($clog2($bits(out.r_data)/8));
+  assign out.ar_size   = $unsigned($clog2(out.AXI_DATA_WIDTH/8));
   assign out.ar_burst  = axi_pkg::BURST_FIXED;
   assign out.ar_lock   = '0;
   assign out.ar_cache  = '0; // non-modifiable and non-bufferable mandated by std

@@ -303,10 +303,10 @@ module axi_write_burst_packer #(
   // pragma translate_off
   `ifndef VERILATOR
     initial begin: p_assertions
-      assert (ADDR_WIDTH > 0) else $fatal("AXI address width must be greater than 0!");
-      assert (DATA_WIDTH > 0) else $fatal("AXI data width must be greater than 0!");
-      assert (ID_WIDTH > 0) else $fatal("AXI ID width must be greater than 0!");
-      assert (BUF_DEPTH >= 1) else $fatal("Buffer depth must be at least 1!");
+      assert (ADDR_WIDTH > 0) else $fatal(1, "AXI address width must be greater than 0!");
+      assert (DATA_WIDTH > 0) else $fatal(1, "AXI data width must be greater than 0!");
+      assert (ID_WIDTH > 0) else $fatal(1, "AXI ID width must be greater than 0!");
+      assert (BUF_DEPTH >= 1) else $fatal(1, "Buffer depth must be at least 1!");
     end
   `endif
   // pragma translate_on
