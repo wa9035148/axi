@@ -22,7 +22,9 @@ module axi_to_axi_lite #(
   /// Maximum number of outstanding reads.
   parameter int NUM_PENDING_RD = 1,
   /// Maximum number of outstanding writes.
-  parameter int NUM_PENDING_WR = 1
+  parameter int NUM_PENDING_WR = 1,
+  parameter int AXI_IW = 1,
+  parameter int AXI_UW = 1
 )(
   input logic     clk_i,
   input logic     rst_ni,
@@ -47,22 +49,22 @@ module axi_to_axi_lite #(
 
   // The transaction information that will be stored locally.
   typedef struct packed {
-    logic [$bits(in.r_id)-1:0] id;
-    logic [$bits(in.r_user)-1:0] user;
+    logic [AXI_IW-1:0] id;
+    logic [AXI_UW-1:0] user;
   } meta_rd_t;
 
   typedef struct packed {
-    logic [$bits(in.b_id)-1:0] id;
-    logic [$bits(in.b_user)-1:0] user;
+    logic [AXI_IW-1:0] id;
+    logic [AXI_UW-1:0] user;
   } meta_wr_t;
 
   // HACK: Rather than passing a meta_rd_t and meta_wr_t into the FIFO's data_o
   //       port, we destructure it into the constituent fields. If we don't do
   //       this, Synopsys DC 2016.03 throws an "Internal Error" on "meta_rd.id".
-  logic [$bits(in.r_id)-1:0] meta_rd_id;
-  logic [$bits(in.r_user)-1:0] meta_rd_user;
-  logic [$bits(in.b_id)-1:0] meta_wr_id;
-  logic [$bits(in.b_user)-1:0] meta_wr_user;
+  logic [AXI_IW-1:0] meta_rd_id;
+  logic [AXI_UW-1:0] meta_rd_user;
+  logic [AXI_IW-1:0] meta_wr_id;
+  logic [AXI_UW-1:0] meta_wr_user;
 
   // The two FIFOs which hold the transaction information.
   logic rd_full;
