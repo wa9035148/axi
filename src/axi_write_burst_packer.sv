@@ -238,7 +238,7 @@ module axi_write_burst_packer #(
   ) i_aw_reg (
     .clk_i,
     .rst_ni,
-    .clr_i      (),
+    .clr_i      (1'b0),
     .testmode_i (),
     .valid_i    (slv_aw_valid),
     .ready_o    (slv_aw_ready),
