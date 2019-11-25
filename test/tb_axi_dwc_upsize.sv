@@ -23,7 +23,6 @@ module tb_axi_dwc_upsize;
   parameter IW  = 4;
   parameter DW  = 32;
   parameter UW  = 8;
-  parameter TS  = 4;
   parameter MULT = 8;
 
   localparam tCK = 1ns;

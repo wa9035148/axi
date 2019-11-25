@@ -214,12 +214,13 @@ module axi_data_upsize #(
   rr_arb_tree #(
     .NumIn    (NR_OUTSTANDING),
     .DataType (si_channel_r_t),
+    .ExtPrio  (1'b0          ),
     .AxiVldRdy(1'b1          )
   ) i_arbiter_slv_r (
     .clk_i                           ,
     .rst_ni                          ,
     .flush_i(1'b0                   ),
-    .rr_i   (/* unused */           ),
+    .rr_i   ('0                     ),
     .req_i  (slv_r_valid_outstanding),
     .gnt_o  (slv_r_ready_outstanding),
     .data_i (slv_r_outstanding      ),
@@ -310,12 +311,13 @@ module axi_data_upsize #(
     .NumIn    (NR_OUTSTANDING),
     .DataType (channel_ax_t  ),
     .AxiVldRdy(1'b1          ),
+    .ExtPrio  (1'b0          ),
     .LockIn   (1'b1          )
   ) i_arbiter_mst_ar (
     .clk_i                            ,
     .rst_ni                           ,
     .flush_i(1'b0                    ),
-    .rr_i   (/* unused */            ),
+    .rr_i   ('0                      ),
     .req_i  (mst_ar_valid_outstanding),
     .gnt_o  (mst_ar_ready_outstanding),
     .data_i (mst_ar_outstanding      ),
@@ -324,9 +326,6 @@ module axi_data_upsize #(
     .data_o (arbiter_mst_ar          ),
     .idx_o  (/* unused */            )
   );
-
-  logic [NR_OUTSTANDING-1:0] slv_ar_ready_outstanding;
-  assign int_slv_ar_ready = |slv_ar_ready_outstanding;
 
   // UNPACK REQUEST SIGNALS
 
@@ -434,7 +433,6 @@ module axi_data_upsize #(
         int_slv_ar_gnt_outstanding[t] = 1'b0;
 
         mst_r_ready_outstanding[t]  = 1'b0;
-        slv_ar_ready_outstanding[t] = 1'b0;
 
         // Got a grant on the AR channel
         if (mst_ar_valid_outstanding[t] && mst_ar_ready_outstanding[t])
@@ -444,9 +442,6 @@ module axi_data_upsize #(
           R_IDLE : begin
             // Reset channels
             r_req_d.ar = '0;
-
-            // Ready
-            slv_ar_ready_outstanding[t] = 1'b1;
 
             // New read request
             if (int_slv_ar_req && (idx_idle_upsizer == t)) begin
@@ -510,7 +505,7 @@ module axi_data_upsize #(
                     slv_r_outstanding[t].data[8*(b + si_offset - mi_offset) +: 8] = mst_r_data[8 * b +: 8];
                   end
 
-                // Acknowledgement
+                // Acknowledgment
                 if (slv_r_ready_outstanding[t]) begin
                   automatic addr_t size_mask = (1 << r_req_q.size) - 1;
 
