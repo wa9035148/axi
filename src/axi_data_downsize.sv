@@ -375,7 +375,7 @@ module axi_data_downsize #(
     .clk_i                               ,
     .rst_ni                              ,
 
-    .inp_id_i        (int_slv.arid      ),
+    .inp_id_i        (int_slv_ar.id     ),
     .inp_data_i      (idx_idle_downsizer),
     .inp_req_i       (|idqueue_push     ),
     .inp_gnt_o       (/* unused  */     ),
@@ -413,31 +413,27 @@ module axi_data_downsize #(
         r_req_d   = r_req_q;
 
         // AR Channel
-        mst_ar_outstanding[t] = '{
-          id      : r_req_q.ar.id,
-          addr    : r_req_q.ar.addr,
-          len     : r_req_q.ar.len,
-          size    : r_req_q.ar.size,
-          burst   : r_req_q.ar.burst,
-          lock    : r_req_q.ar.lock,
-          cache   : r_req_q.ar.cache,
-          prot    : r_req_q.ar.prot,
-          qos     : r_req_q.ar.qos,
-          region  : r_req_q.ar.prot,
-          user    : r_req_q.ar.user,
-          valid   : r_req_q.ar.valid,
-          default : '0
-        };
+        mst_ar_outstanding[t]        = '0;
+        mst_ar_outstanding[t].id     = r_req_q.ar.id;
+        mst_ar_outstanding[t].addr   = r_req_q.ar.addr;
+        mst_ar_outstanding[t].len    = r_req_q.ar.len;
+        mst_ar_outstanding[t].size   = r_req_q.ar.size;
+        mst_ar_outstanding[t].burst  = r_req_q.ar.burst;
+        mst_ar_outstanding[t].lock   = r_req_q.ar.lock;
+        mst_ar_outstanding[t].cache  = r_req_q.ar.cache;
+        mst_ar_outstanding[t].prot   = r_req_q.ar.prot;
+        mst_ar_outstanding[t].qos    = r_req_q.ar.qos;
+        mst_ar_outstanding[t].region = r_req_q.ar.prot;
+        mst_ar_outstanding[t].user   = r_req_q.ar.user;
+        mst_ar_outstanding[t].valid  = r_req_q.ar.valid;
 
         // R Channel
-        slv_r_outstanding[t] = '{
-          id    : r_req_q.r.id,
-          data  : r_req_q.r.data,
-          resp  : r_req_q.r.resp,
-          last  : r_req_q.r.last,
-          user  : r_req_q.r.user,
-          valid : r_req_q.r.valid
-        };
+        slv_r_outstanding[t].id    = r_req_q.r.id;
+        slv_r_outstanding[t].data  = r_req_q.r.data;
+        slv_r_outstanding[t].resp  = r_req_q.r.resp;
+        slv_r_outstanding[t].last  = r_req_q.r.last;
+        slv_r_outstanding[t].user  = r_req_q.r.user;
+        slv_r_outstanding[t].valid = r_req_q.r.valid;
 
         idqueue_push[t] = '0;
         idqueue_pop[t]  = '0;
@@ -470,23 +466,21 @@ module axi_data_downsize #(
               r_state_d = R_PASSTHROUGH;
 
               // Save beat
-              r_req_d.ar = '{
-                id      : int_slv_ar.id,
-                addr    : int_slv_ar.addr,
-                size    : int_slv_ar.size,
-                burst   : int_slv_ar.burst,
-                len     : int_slv_ar.len,
-                lock    : int_slv_ar.lock,
-                cache   : int_slv_ar.cache,
-                prot    : int_slv_ar.prot,
-                qos     : int_slv_ar.qos,
-                region  : int_slv_ar.region,
-                user    : int_slv_ar.user,
-                valid   : &(~int_slv_ar.atop), // Injected "AR"s from AW are not valid.
-                default : '0
-              };
-              r_req_d.len  = int_slv_ar.len;
-              r_req_d.size = int_slv_ar.size;
+              r_req_d.ar        = '0;
+              r_req_d.ar.id     = int_slv_ar.id;
+              r_req_d.ar.addr   = int_slv_ar.addr;
+              r_req_d.ar.size   = int_slv_ar.size;
+              r_req_d.ar.burst  = int_slv_ar.burst;
+              r_req_d.ar.len    = int_slv_ar.len;
+              r_req_d.ar.lock   = int_slv_ar.lock;
+              r_req_d.ar.cache  = int_slv_ar.cache;
+              r_req_d.ar.prot   = int_slv_ar.prot;
+              r_req_d.ar.qos    = int_slv_ar.qos;
+              r_req_d.ar.region = int_slv_ar.region;
+              r_req_d.ar.user   = int_slv_ar.user;
+              r_req_d.ar.valid  = &(~int_slv_ar.atop); // Injected "AR"s from AW are not valid.
+              r_req_d.len       = int_slv_ar.len;
+              r_req_d.size      = int_slv_ar.size;
 
               if (|(int_slv_ar.cache & CACHE_MODIFIABLE))
                 case (int_slv_ar.burst)
@@ -558,7 +552,7 @@ module axi_data_downsize #(
                         r_req_d.r.valid = 1'b1;
 
                       R_INCR_DOWNSIZE, R_SPLIT_INCR_DOWNSIZE:
-                        // Forward when the burst is finished, or when a word was filled up
+                        // Forward when the burst is finished, or after filling up a word
                         if (r_req_q.len == 0 || (align_addr(r_req_d.ar.addr, r_req_q.size) != align_addr(r_req_q.ar.addr, r_req_q.size)))
                           r_req_d.r.valid = 1'b1;
                     endcase // case (r_state_q[t])
