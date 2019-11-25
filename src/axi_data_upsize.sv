@@ -347,11 +347,17 @@ module axi_data_upsize #(
   logic [NR_OUTSTANDING-1:0] idle_read_upsizer;
   tr_id_t                    idx_idle_upsizer ;
 
-  lzc #(.WIDTH(NR_OUTSTANDING)) i_read_lzc (
-    .in_i   (idle_read_upsizer),
-    .cnt_o  (idx_idle_upsizer ),
-    .empty_o(                 )
-  );
+  generate
+    if (NR_OUTSTANDING > 1) begin: gen_read_lzc
+      lzc #(.WIDTH(NR_OUTSTANDING)) i_read_lzc (
+        .in_i   (idle_read_upsizer),
+        .cnt_o  (idx_idle_upsizer ),
+        .empty_o(                 )
+      );
+    end else begin
+      assign idx_idle_upsizer = 1'b0;
+    end
+  endgenerate
 
   // This ID queue is used to resolve which FSM is handling
   // each outstanding read transaction
