@@ -4,6 +4,7 @@ package:
     - "Andreas Kurth <akurth@iis.ee.ethz.ch>" # current maintainer
     - "Fabian Schuiki <fschuiki@iis.ee.ethz.ch>"
     - "Florian Zaruba <zarubaf@iis.ee.ethz.ch>"
+    - "Matheus Cavalcante <matheusd@iis.ee.ethz.ch>"
 
 dependencies:
   apb: { git: "https://github.com/pulp-platform/apb.git", rev: release-0.2 }

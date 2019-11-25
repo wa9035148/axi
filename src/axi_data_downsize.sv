@@ -191,7 +191,7 @@ module axi_data_downsize #(
   } si_channel_r_t;
 
   function automatic addr_t align_addr(addr_t unaligned_addr, size_t size);
-    return unaligned_addr & ~((1 << size) - 1);
+    return unaligned_addr & ~((addr_t'(1'b1) << size) - 1);
   endfunction // align_addr
 
   // Length of burst after downsizing
