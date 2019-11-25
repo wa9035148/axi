@@ -709,11 +709,22 @@ package axi_test;
       automatic mem_region_t mem_region;
       automatic int cprob;
 
-      // Randomly pick a memory region
-      rand_success = std::randomize(mem_region_idx) with {
-        mem_region_idx < mem_map.size();
-      }; assert(rand_success);
-      mem_region = mem_map[mem_region_idx];
+      // No memory regions defined
+      if (mem_map.size() == 0) begin
+        // Return a dummy region
+        mem_region = '{
+          addr_begin: '0,
+          addr_end:   '1,
+          mem_type:   axi_pkg::NORMAL_NONCACHEABLE_BUFFERABLE
+        };
+      end else begin
+        // Randomly pick a memory region
+        rand_success = std::randomize(mem_region_idx) with {
+          mem_region_idx < mem_map.size();
+        }; assert(rand_success);
+        mem_region = mem_map[mem_region_idx];
+      end
+
       // Randomly pick FIXED or INCR burst.  WRAP is currently not supported.
       rand_success = std::randomize(burst) with {
         burst <= axi_pkg::BURST_INCR;
@@ -803,14 +814,13 @@ package axi_test;
         // Determine `ax_atop`.
         if (beat.ax_atop[5:4] == axi_pkg::ATOP_ATOMICSTORE ||
             beat.ax_atop[5:4] == axi_pkg::ATOP_ATOMICLOAD) begin
-          beat.ax_atop[5:4] = axi_pkg::ATOP_ATOMICLOAD; // (Do not support stores)
           // Endianness
           beat.ax_atop[3] = $random();
           // Atomic operation
           beat.ax_atop[2:0] = $random();
         end else begin // Atomic{Swap,Compare}
           beat.ax_atop[3:1] = '0;
-          //beat.ax_atop[0] = $random(); (Do not support compares)
+          beat.ax_atop[0] = $random();
         end
         // Determine `ax_size` and `ax_len`.
         if (2**beat.ax_size < AXI_STRB_WIDTH) begin
