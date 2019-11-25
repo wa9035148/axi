@@ -202,7 +202,7 @@ module axi_perf_mon #(
     localparam int unsigned N_OUP_REGS = 128-2;
     logic [N_OUP_REGS-1:0][31:0] oup_reg;
 
-    counter #(.WIDTH(CW_CLK), .LATCH_OVERFLOW(1'b1)) i_cnt_clk (
+    counter #(.WIDTH(CW_CLK), .STICKY_OVERFLOW(1'b1)) i_cnt_clk (
       .clk_i      (clk_axi_i[i]),
       .rst_ni     (rst_axi_ni[i]),
       .clear_i    (clr),
@@ -220,7 +220,7 @@ module axi_perf_mon #(
     // 1: Handshakes
     if (CAP_HS) begin: gen_hs
       assign cap_reg[1] = 1'b1;
-      counter #(.WIDTH(CW_HS_CMD), .LATCH_OVERFLOW(1'b1)) i_hs_cnt_ar (
+      counter #(.WIDTH(CW_HS_CMD), .STICKY_OVERFLOW(1'b1)) i_hs_cnt_ar (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -231,7 +231,7 @@ module axi_perf_mon #(
         .q_o        (hs_cnt_ar),
         .overflow_o (hs_cnt_ar_oflw)
       );
-      counter #(.WIDTH(CW_HS_CMD), .LATCH_OVERFLOW(1'b1)) i_hs_cnt_aw (
+      counter #(.WIDTH(CW_HS_CMD), .STICKY_OVERFLOW(1'b1)) i_hs_cnt_aw (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -242,7 +242,7 @@ module axi_perf_mon #(
         .q_o        (hs_cnt_aw),
         .overflow_o (hs_cnt_aw_oflw)
       );
-      counter #(.WIDTH(CW_HS_DAT), .LATCH_OVERFLOW(1'b1)) i_hs_cnt_r (
+      counter #(.WIDTH(CW_HS_DAT), .STICKY_OVERFLOW(1'b1)) i_hs_cnt_r (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -253,7 +253,7 @@ module axi_perf_mon #(
         .q_o        (hs_cnt_r),
         .overflow_o (hs_cnt_r_oflw)
       );
-      counter #(.WIDTH(CW_HS_DAT), .LATCH_OVERFLOW(1'b1)) i_hs_cnt_w (
+      counter #(.WIDTH(CW_HS_DAT), .STICKY_OVERFLOW(1'b1)) i_hs_cnt_w (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -464,7 +464,7 @@ module axi_perf_mon #(
     // 5: Stalls
     if (CAP_STALL) begin: gen_stall
       assign cap_reg[5] = 1'b1;
-      counter #(.WIDTH(CW_STALL_CMD), .LATCH_OVERFLOW(1'b1)) i_stall_cnt_ar (
+      counter #(.WIDTH(CW_STALL_CMD), .STICKY_OVERFLOW(1'b1)) i_stall_cnt_ar (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -475,7 +475,7 @@ module axi_perf_mon #(
         .q_o        (stall_cnt_ar),
         .overflow_o (stall_cnt_ar_oflw)
       );
-      counter #(.WIDTH(CW_STALL_CMD), .LATCH_OVERFLOW(1'b1)) i_stall_cnt_aw (
+      counter #(.WIDTH(CW_STALL_CMD), .STICKY_OVERFLOW(1'b1)) i_stall_cnt_aw (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -486,7 +486,7 @@ module axi_perf_mon #(
         .q_o        (stall_cnt_aw),
         .overflow_o (stall_cnt_aw_oflw)
       );
-      counter #(.WIDTH(CW_STALL_CMD), .LATCH_OVERFLOW(1'b1)) i_stall_cnt_b (
+      counter #(.WIDTH(CW_STALL_CMD), .STICKY_OVERFLOW(1'b1)) i_stall_cnt_b (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -497,7 +497,7 @@ module axi_perf_mon #(
         .q_o        (stall_cnt_b),
         .overflow_o (stall_cnt_b_oflw)
       );
-      counter #(.WIDTH(CW_STALL_DAT), .LATCH_OVERFLOW(1'b1)) i_stall_cnt_r (
+      counter #(.WIDTH(CW_STALL_DAT), .STICKY_OVERFLOW(1'b1)) i_stall_cnt_r (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -508,7 +508,7 @@ module axi_perf_mon #(
         .q_o        (stall_cnt_r),
         .overflow_o (stall_cnt_r_oflw)
       );
-      counter #(.WIDTH(CW_STALL_DAT), .LATCH_OVERFLOW(1'b1)) i_stall_cnt_w (
+      counter #(.WIDTH(CW_STALL_DAT), .STICKY_OVERFLOW(1'b1)) i_stall_cnt_w (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -660,7 +660,7 @@ module axi_perf_mon #(
     // 7: Exclusive accesses
     if (CAP_EXCL) begin: gen_excl
       assign cap_reg[7] = 1'b1;
-      counter #(.WIDTH(CW_EXCL), .LATCH_OVERFLOW(1'b1)) i_excl_cnt_ar (
+      counter #(.WIDTH(CW_EXCL), .STICKY_OVERFLOW(1'b1)) i_excl_cnt_ar (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -671,7 +671,7 @@ module axi_perf_mon #(
         .q_o        (excl_cnt_ar),
         .overflow_o (excl_cnt_ar_oflw)
       );
-      counter #(.WIDTH(CW_EXCL), .LATCH_OVERFLOW(1'b1)) i_excl_cnt_aw (
+      counter #(.WIDTH(CW_EXCL), .STICKY_OVERFLOW(1'b1)) i_excl_cnt_aw (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -683,7 +683,7 @@ module axi_perf_mon #(
         .overflow_o (excl_cnt_aw_oflw)
       );
       import axi_pkg::RESP_EXOKAY;
-      counter #(.WIDTH(CW_EXCL), .LATCH_OVERFLOW(1'b1)) i_excl_cnt_b (
+      counter #(.WIDTH(CW_EXCL), .STICKY_OVERFLOW(1'b1)) i_excl_cnt_b (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -717,7 +717,7 @@ module axi_perf_mon #(
     if (CAP_ATOP) begin: gen_atop
       import axi_pkg::ATOP_ATOMICSTORE;
       assign cap_reg[8] = 1'b1;
-      counter #(.WIDTH(CW_ATOP), .LATCH_OVERFLOW(1'b1)) i_atop_cnt_st (
+      counter #(.WIDTH(CW_ATOP), .STICKY_OVERFLOW(1'b1)) i_atop_cnt_st (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -729,7 +729,7 @@ module axi_perf_mon #(
         .overflow_o (atop_cnt_st_oflw)
       );
       import axi_pkg::ATOP_ATOMICLOAD;
-      counter #(.WIDTH(CW_ATOP), .LATCH_OVERFLOW(1'b1)) i_atop_cnt_ld (
+      counter #(.WIDTH(CW_ATOP), .STICKY_OVERFLOW(1'b1)) i_atop_cnt_ld (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -741,7 +741,7 @@ module axi_perf_mon #(
         .overflow_o (atop_cnt_ld_oflw)
       );
       import axi_pkg::ATOP_ATOMICSWAP;
-      counter #(.WIDTH(CW_ATOP), .LATCH_OVERFLOW(1'b1)) i_atop_cnt_swp (
+      counter #(.WIDTH(CW_ATOP), .STICKY_OVERFLOW(1'b1)) i_atop_cnt_swp (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
@@ -753,7 +753,7 @@ module axi_perf_mon #(
         .overflow_o (atop_cnt_swp_oflw)
       );
       import axi_pkg::ATOP_ATOMICCMP;
-      counter #(.WIDTH(CW_ATOP), .LATCH_OVERFLOW(1'b1)) i_atop_cnt_cmp (
+      counter #(.WIDTH(CW_ATOP), .STICKY_OVERFLOW(1'b1)) i_atop_cnt_cmp (
         .clk_i      (clk_axi_i[i]),
         .rst_ni     (rst_axi_ni[i]),
         .clear_i    (clr),
